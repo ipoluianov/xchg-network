@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
-	cmd.CmdCreateKey("123")
+	cmd.CmdCreateKey("12345")
+	cmd.CmdCreateNetworkContainer("12345")
 	fmt.Println("started")
 }
