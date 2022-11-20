@@ -1,13 +1,117 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+	"syscall"
 
-	"github.com/ipoluianov/xchg-network/cmd"
+	"golang.org/x/term"
+
+	"github.com/ipoluianov/xchg/xchg"
 )
 
+func CurrentExePath() string {
+	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	return dir
+}
+
+func EnterPassword() (string, error) {
+	fmt.Print("Enter Password: ")
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return "", err
+	}
+
+	password := string(bytePassword)
+	return strings.TrimSpace(password), nil
+}
+
+// Generate RSA key pair.
+// AES-GSM encrypted private key (PKCS8) is stored in file xchgr_private_key.base64 in base64 format
+// RSA public key is stored in xchgr_public_key.base64 in base64 format
+func CmdCreateKey(password string) {
+	encryptedPrivateKeyBase64, publicKeyBase64, err := xchg.NetworkContainerCreateKey(password)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	err = os.MkdirAll(CurrentExePath()+"/xchg-network-result", 0777)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	err = ioutil.WriteFile(CurrentExePath()+"/xchg-network-result/xchgr_private_key.base64", []byte(encryptedPrivateKeyBase64), 0666)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	err = ioutil.WriteFile(CurrentExePath()+"/xchg-network-result/xchgr_public_key.base64", []byte(publicKeyBase64), 0666)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	fmt.Println("SUCCESS")
+}
+
+// Make network container.
+// Result: zip-file in base64 format. It is stored in file network.zip.base64
+func CmdCreateNetworkContainer(password string) {
+	network := xchg.NewNetworkDefault()
+
+	zipFile, err := xchg.NetworkContainerMake(network, xchg.NetworkContainerEncryptedPrivateKey, password)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	err = os.MkdirAll(CurrentExePath()+"/xchg-network-result", 0777)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	err = ioutil.WriteFile(CurrentExePath()+"/xchg-network-result/network.zip", zipFile, 0666)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	zipFileBase64 := base64.StdEncoding.EncodeToString(zipFile)
+
+	err = ioutil.WriteFile(CurrentExePath()+"/xchg-network-result/network.zip.base64", []byte(zipFileBase64), 0666)
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	fmt.Println("SUCCESS")
+}
+
 func main() {
-	cmd.CmdCreateKey("12345")
-	cmd.CmdCreateNetworkContainer("12345")
-	fmt.Println("started")
+	fmt.Println("xchg-network")
+
+	for {
+		fmt.Print("cmd>")
+		var cmd string
+		fmt.Scanln(&cmd)
+		if cmd == "quit" || cmd == "exit" {
+			break
+		}
+
+		if cmd == "generate" {
+			password, _ := EnterPassword()
+			CmdCreateKey(password)
+		}
+
+		if cmd == "network" {
+			password, _ := EnterPassword()
+			CmdCreateNetworkContainer(password)
+		}
+	}
 }
