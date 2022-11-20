@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 
 	"golang.org/x/term"
 
@@ -62,8 +63,7 @@ func CmdCreateKey(password string) {
 
 // Make network container.
 // Result: zip-file in base64 format. It is stored in file network.zip.base64
-func CmdCreateNetworkContainer(password string) {
-	network := xchg.NewNetworkDefault()
+func CmdCreateNetworkContainer(network *xchg.Network, password string) {
 
 	zipFile, err := xchg.NetworkContainerMake(network, xchg.NetworkContainerEncryptedPrivateKey, password)
 	if err != nil {
@@ -93,6 +93,30 @@ func CmdCreateNetworkContainer(password string) {
 	fmt.Println("SUCCESS")
 }
 
+func makeNetwork() *xchg.Network {
+	network := xchg.NewNetwork()
+	network.Name = "MainNet"
+	network.Timestamp = time.Now().Unix()
+
+	network.InitialPoints = make([]string, 0)
+	network.InitialPoints = append(network.InitialPoints, "http://xchgx.net/network.zip.base64")
+	network.InitialPoints = append(network.InitialPoints, "http://xchg.gazer.cloud/network.zip.base64")
+	network.InitialPoints = append(network.InitialPoints, "http://allece.com/network.zip.base64")
+	network.InitialPoints = append(network.InitialPoints, "http://allece.net/network.zip.base64")
+	network.InitialPoints = append(network.InitialPoints, "http://allece.org/network.zip.base64")
+
+	s1 := "54.37.73.160:8084"
+	s2 := "54.37.73.229:8084"
+
+	for r := 0; r < 16; r++ {
+		rangePrefix := fmt.Sprintf("%X", r)
+		network.AddHostToRange(rangePrefix, s1)
+		network.AddHostToRange(rangePrefix, s2)
+	}
+
+	return network
+}
+
 func main() {
 	fmt.Println("xchg-network")
 
@@ -111,7 +135,7 @@ func main() {
 
 		if cmd == "network" {
 			password, _ := EnterPassword()
-			CmdCreateNetworkContainer(password)
+			CmdCreateNetworkContainer(makeNetwork(), password)
 		}
 	}
 }

@@ -1,5 +1,5 @@
-github.com/ipoluianov/xchg v0.1.2 h1:fK6K2SiDtaJNR8TKEoqPxg3iw2tn7OlP6SLqlUuJKts=
-github.com/ipoluianov/xchg v0.1.2/go.mod h1:iaCudgopm+9kt/GAAP3az8Y2FqpdWIKOVTiwwqI4MhU=
+github.com/ipoluianov/xchg v0.1.4 h1:VtRg+J+slW32QHixYzoiJTB54SO0+1p2Bte2268PfCQ=
+github.com/ipoluianov/xchg v0.1.4/go.mod h1:iaCudgopm+9kt/GAAP3az8Y2FqpdWIKOVTiwwqI4MhU=
 golang.org/x/sys v0.2.0 h1:ljd4t30dBnAvMZaQCevtY0xLLD0A+bRZXbgLMLU1F/A=
 golang.org/x/sys v0.2.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.2.0 h1:z85xZCsEl7bi/KwbNADeBYoOP0++7W1ipu+aGnpwzRM=

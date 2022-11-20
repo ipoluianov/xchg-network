@@ -3,7 +3,7 @@ module github.com/ipoluianov/xchg-network
 go 1.18
 
 require (
-	github.com/ipoluianov/xchg v0.1.2
+	github.com/ipoluianov/xchg v0.1.4
 	golang.org/x/term v0.2.0
 )
 
