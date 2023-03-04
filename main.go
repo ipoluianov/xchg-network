@@ -99,14 +99,11 @@ func makeNetwork() *xchg.Network {
 	network.Timestamp = time.Now().Unix()
 
 	network.InitialPoints = make([]string, 0)
-	//network.InitialPoints = append(network.InitialPoints, "http://xchgx.net/network.zip.base64")
-	//network.InitialPoints = append(network.InitialPoints, "http://xchg.gazer.cloud/network.zip.base64")
-	network.InitialPoints = append(network.InitialPoints, "http://allece.com/network.zip.base64")
-	network.InitialPoints = append(network.InitialPoints, "http://allece.net/network.zip.base64")
-	network.InitialPoints = append(network.InitialPoints, "http://allece.org/network.zip.base64")
+	network.InitialPoints = append(network.InitialPoints, "http://xchgx.net/network.zip.base64")
+	network.InitialPoints = append(network.InitialPoints, "http://xchg.gazer.cloud/network.zip.base64")
 
-	s1 := "54.37.73.160:8084"
-	s2 := "54.37.73.229:8084"
+	s1 := "x01.gazer.cloud:8084"
+	s2 := "x02.gazer.cloud:8084"
 
 	for r := 0; r < 16; r++ {
 		rangePrefix := fmt.Sprintf("%X", r)
