@@ -95,15 +95,15 @@ func CmdCreateNetworkContainer(network *xchg.Network, password string) {
 
 func makeNetwork() *xchg.Network {
 	network := xchg.NewNetwork()
-	network.Name = "MainNet"
+	network.Name = "MainNet-23-09-18-001"
 	network.Timestamp = time.Now().Unix()
 
 	network.InitialPoints = make([]string, 0)
 	network.InitialPoints = append(network.InitialPoints, "http://xchgx.net/network.zip.base64")
 	network.InitialPoints = append(network.InitialPoints, "http://xchg.gazer.cloud/network.zip.base64")
 
-	s1 := "x01.gazer.cloud:8084"
-	s2 := "x02.gazer.cloud:8084"
+	s1 := "x03.gazer.cloud:8084"
+	s2 := "x04.gazer.cloud:8084"
 
 	for r := 0; r < 16; r++ {
 		rangePrefix := fmt.Sprintf("%X", r)
